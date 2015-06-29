@@ -8,6 +8,7 @@ def reflectedGrid(grid):
         reflected.append(tempGrid)
     return reflected
 
+#returns a grid without horizontal repeats
 def gridWithoutHorizontalRepeats(grid):
     tempGrid = []
     for row in grid:
@@ -18,6 +19,7 @@ def gridWithoutHorizontalRepeats(grid):
         tempGrid.append(tempSubGrid)
     return tempGrid
 
+#formats and prints the input grid
 def printGrid(grid):
     for row in grid:
         tempStr = '[ '
@@ -26,34 +28,26 @@ def printGrid(grid):
         tempStr = tempStr + ']'
         print(tempStr)
 
+#creates an empty grid that will be used to store user input
 grid = []
 
+#takes 4 lines of user input and splits the lines by ',' to form a grid, lists inside of lists
 for _ in range(4):
     grid.append(raw_input().split(','))
 
 #prints (a): the original grid
-'''print('\nThe Following is part (a), the original grid:')
-for row in grid:
-    print('[ {0} {1} {2} {3} {4} ]'.format(row[0],row[1],row[2],row[3],row[4]))'''
+print('\nThe Following is part (a), the original grid:')
 printGrid(grid)
-'''
+
 #prints (b): the reflected grid
 print('\nThe Following is part (b), the original grid reflected over the diagonal running from top left to bottom right:')
-for row in reflectedGrid(grid):
-    print('[ {0} {1} {2} {3} ]'.format(row[0],row[1],row[2],row[3]))
+printGrid(reflectedGrid(grid))
 
 #prints (c): Both versions of the grid with horizontal repeats removed
-print('\nThe Following is part (c):\n')
+print('\nThe Following is part (c):')
 
 print('The original grid with repeats removed:')
-for row in gridWithoutHorizontalRepeats(grid):
-    tempStr = '[ '
-    for item in row:
-        tempStr = tempStr + item + ' '
-    tempStr = tempStr + ']'
-    print(tempStr)
+printGrid(gridWithoutHorizontalRepeats(grid))
 
 print('The reflected grid with repeats removed:')
-for row in gridWithoutHorizontalRepeats(reflectedGrid(grid)):
-    print('[ {0} {1} {2} {3} ]'.format(row[0],row[1],row[2],row[3]))
-'''
+printGrid(gridWithoutHorizontalRepeats(reflectedGrid(grid)))
