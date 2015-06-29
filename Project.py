@@ -22,18 +22,34 @@ def gridWithoutHorizontalRepeats(grid):
 #formats and prints the input grid
 def printGrid(grid):
     for row in grid:
-        tempStr = '[ '
+        tempStr = '['
         for item in row:
-            tempStr = tempStr + item + ' '
+            tempStr = tempStr + str(item) + (',','')[row.index(item) == len(row) - 1]
         tempStr = tempStr + ']'
         print(tempStr)
+
+def matrix_multiply(matrix_a, matrix_b):
+    temp_matrix = []
+    for m_1_y in range(len(matrix_a)):
+        temp_row = []
+        for m_2_x in range(len(matrix_a)):
+            dot_product = 0
+            for m_1_x in range(len(matrix_a[m_1_y])):
+                dot_product += int(matrix_a[m_1_y][m_1_x]) * int(matrix_b[m_1_x][m_2_x])
+            temp_row.append(dot_product)
+        temp_matrix.append(temp_row)
+    return temp_matrix
+
+#prompts user for grid specifications
+row = input('How many rows would you like the grid to have: ')
+print('Please enter the contents of each row with each item separated by a ","')
 
 #creates an empty grid that will be used to store user input
 grid = []
 
 #takes 4 lines of user input and splits the lines by ',' to form a grid, lists inside of lists
-for _ in range(4):
-    grid.append(raw_input().split(','))
+for _ in range(row):
+    grid.append(raw_input("Enter row {0}: ".format(_ + 1)).split(','))
 
 #prints (a): the original grid
 print('\nThe Following is part (a), the original grid:')
@@ -51,3 +67,7 @@ printGrid(gridWithoutHorizontalRepeats(grid))
 
 print('The reflected grid with repeats removed:')
 printGrid(gridWithoutHorizontalRepeats(reflectedGrid(grid)))
+
+#prints the product of the original grid and its reflection
+print('\nThe following is the product of the original grid and the reflection of the original grid')
+printGrid(matrix_multiply(grid,reflectedGrid(grid)))
