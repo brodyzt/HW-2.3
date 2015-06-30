@@ -41,7 +41,7 @@ def matrix_multiply(matrix_a, matrix_b):
     return temp_matrix
 
 #prompts user for grid specifications
-row = input('How many rows would you like the grid to have: ')
+row = int(input('How many rows would you like the grid to have: '))
 print('Please enter the contents of each row with each item separated by a ","')
 
 #creates an empty grid that will be used to store user input
@@ -49,7 +49,7 @@ grid = []
 
 #takes 4 lines of user input and splits the lines by ',' to form a grid, lists inside of lists
 for _ in range(row):
-    grid.append(raw_input("Enter row {0}: ".format(_ + 1)).split(','))
+    grid.append(input("Enter row {0}: ".format(_ + 1)).split(','))
 
 #prints (a): the original grid
 print('\nThe Following is part (a), the original grid:')
