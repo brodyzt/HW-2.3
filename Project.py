@@ -1,9 +1,11 @@
 import copy
+import types
 class Matrix:
     #following function returns a reflected version of the input grid
     def __init__(self, grid):
         self.grid = grid
 
+    #returns a grid reflected over a line from top left to bottom right
     def reflect(self):
         reflected = []
         for x in range(len(self.grid[0])):
@@ -28,24 +30,73 @@ class Matrix:
     def print(self):
         for row in self.grid:
             tempStr = '['
-            for item in row:
-                tempStr = tempStr + str(item) + (',','')[row.index(item) == len(row) - 1]
+            for x in range(len(row)):
+                tempStr = tempStr + str(row[x]) + (',' if x != (len(row) - 1) else '')
             tempStr = tempStr + ']'
             print(tempStr)
 
-    #multiples the two input matrices and returns the product
-    def multiply(self,matrix_a, matrix_b):
-        temp_matrix = []
-        for m_1_y in range(len(matrix_a)):
+    def vector_multiply(matrix_a,matrix_b):
+        if(type(matrix_a[0]) is not list):
+            temp_matrix = []
             temp_row = []
-            for m_2_x in range(len(matrix_a)):
-                dot_product = 0
-                for m_1_x in range(len(matrix_a[m_1_y])):
-                    dot_product += int(matrix_a[m_1_y][m_1_x]) * int(matrix_b[m_1_x][m_2_x])
-                temp_row.append(dot_product)
+            dot_product = 0
+            for m_1_x in range(len(matrix_a)):
+                dot_product += matrix_a[m_1_x] * matrix_b[m_1_x][0]
+            temp_row.append(dot_product)
             temp_matrix.append(temp_row)
-        return self(temp_matrix)
+        elif(type(matrix_b[0]) is not list):
+            temp_matrix = []
+            for m_1_y in range(len(matrix_a)):
+                temp_row = []
+                for m_2_x in range(len(matrix_b)):
+                    dot_product = 0
+                    for m_1_x in range(len(matrix_a[m_1_y])):
+                        dot_product += int(matrix_a[m_1_y][m_1_x]) * int(matrix_b[m_2_x])
+                    temp_row.append(dot_product)
+                temp_matrix.append(temp_row)
+        return Matrix(temp_matrix)
 
+    #multiples the two input matrices and returns the product
+    def multiply(matrix_a, matrix_b):
+        temp_matrix = []
+        if(type(matrix_a[0]) is not list or type(matrix_b[0]) is not list):
+            temp_matrix = Matrix.vector_multiply(matrix_a,matrix_b).grid
+        else:
+            for m_1_y in range(len(matrix_a)):
+                temp_row = []
+                for m_2_x in range(len(matrix_b[0])):
+                    dot_product = 0
+                    for m_1_x in range(len(matrix_a[m_1_y])):
+                        dot_product += int(matrix_a[m_1_y][m_1_x]) * int(matrix_b[m_1_x][m_2_x])
+                    temp_row.append(dot_product)
+                temp_matrix.append(temp_row)
+        return Matrix(temp_matrix)
+
+    #adds the two input matrices and returns the sum
+    def add(matrix_a, matrix_b):
+        temp_matrix = []
+        if len(matrix_a) == len(matrix_b) and len(matrix_a[0]) == len(matrix_b[0]):
+            for row in range(len(matrix_a)):
+                temp_row = []
+                for column in range(len(matrix_a[0])):
+                    temp_row.append(matrix_a[row][column] + matrix_b[row][column])
+                temp_matrix.append(temp_row)
+        return Matrix(temp_matrix)
+
+    #subtracts the second input matrix from the first and returns the difference
+    def subtract(matrix_a, matrix_b):
+        temp_matrix = []
+        if len(matrix_a) == len(matrix_b) and len(matrix_a[0]) == len(matrix_b[0]):
+            for row in range(len(matrix_a)):
+                temp_row = []
+                for column in range(len(matrix_a[0])):
+                    temp_row.append(matrix_a[row][column] - matrix_b[row][column])
+                temp_matrix.append(temp_row)
+        return Matrix(temp_matrix)
+
+    def divide(matrix_a,matrix_b):
+        pass
+'''
 #prompts user for grid specifications
 row = int(input('How many rows would you like the grid to have: '))
 print('Please enter the contents of each row with each item separated by a ","')
@@ -77,7 +128,11 @@ user_grid.remove_horizontal_repeats().print()
 
 print('The reflected grid with repeats removed:')
 user_grid.reflect().remove_horizontal_repeats().print()
-'''
+
 #prints the product of the original grid and its reflection
 print('\nThe following is the product of the original grid and the reflection of the original grid')
 Matrix.multiply(user_grid, user_grid.reflect()).print()'''
+
+matrix1 = [[1],[10],[40]]
+matrix2 = [4,1,5]
+Matrix.multiply(matrix1,matrix2).print()
