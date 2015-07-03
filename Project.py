@@ -44,7 +44,8 @@ class Matrix:
             print(temp_str)
 
     def type(input_object):
-        if (type(input_object) is int or type(input_object) is float) or (len(input_object.grid) == 1 and len(input_object.grid[0]) == 1):
+        if (type(input_object) is int or type(input_object) is float)\
+                or (len(input_object.grid) == 1 and len(input_object.grid[0]) == 1):
             return MatrixType.scalar
         elif type(input_object.grid) is list and type(input_object.grid[0]) is not list:
             return MatrixType.horizontal_vector
@@ -109,7 +110,8 @@ class Matrix:
         if ((Matrix.type(matrix_a) == MatrixType.scalar and Matrix.type(matrix_b) == MatrixType.matrix)
                 or (Matrix.type(matrix_b) == MatrixType.scalar and Matrix.type(matrix_a) == MatrixType.matrix)):
             return Matrix.scalar_matrix_multiply(matrix_a, matrix_b)
-        elif ((Matrix.type(matrix_a) == MatrixType.horizontal_vector or Matrix.type(matrix_a) == MatrixType.vertical_vector)
+        elif ((Matrix.type(matrix_a) == MatrixType.horizontal_vector
+               or Matrix.type(matrix_a) == MatrixType.vertical_vector)
                 and Matrix.type(matrix_b) == MatrixType.matrix):
             return Matrix.vector_matrix_multiply(matrix_a, matrix_b)
         elif Matrix.type(matrix_a) == MatrixType.matrix and Matrix.type(matrix_b) == MatrixType.matrix:
