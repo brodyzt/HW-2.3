@@ -1,6 +1,16 @@
 import copy
 import types
+from enum import Enum
+
+class Matrix_type(Enum):
+        scalar = 1
+        horizontal_vector = 2
+        vertical_vector = 3
+        matrix = 4
+
 class Matrix:
+
+
     #following function returns a reflected version of the input grid
     def __init__(self, grid):
         self.grid = grid
@@ -35,7 +45,18 @@ class Matrix:
             tempStr = tempStr + ']'
             print(tempStr)
 
-    def vector_multiply(matrix_a,matrix_b):
+    def type(input):
+        if((type(input) is int or type(input) is float) or (len(input.grid) == 1 and len(input.grid[0]) == 1)):
+            return Matrix_type.scalar
+        elif(type(input.grid) is list and type(input.grid[0]) is not list):
+            return Matrix_type.horizontal_vector
+        elif(type(input.grid) is list and len(input.grid[0]) == 1):
+            return Matrix_type.vertical_vector
+        elif(type(input.grid) is list and len(input.grid[0]) > 1):
+            return Matrix_type.matrix
+
+
+    def vector_matrix_multiply(matrix_a,matrix_b):
         if(type(matrix_a[0]) is not list):
             temp_matrix = []
             temp_row = []
@@ -56,21 +77,35 @@ class Matrix:
                 temp_matrix.append(temp_row)
         return Matrix(temp_matrix)
 
+    def scalar_matrix_multiply(scalar, matrix_a):
+        temp_matrix = []
+        for row in matrix_a.grid:
+            temp_row = []
+            for item in row:
+                temp_row.append(item * scalar)
+            temp_matrix.append(temp_row)
+        return Matrix(temp_matrix)
+
     #multiples the two input matrices and returns the product
     def multiply(matrix_a, matrix_b):
         temp_matrix = []
-        if(type(matrix_a[0]) is not list or type(matrix_b[0]) is not list):
-            temp_matrix = Matrix.vector_multiply(matrix_a,matrix_b).grid
+        if(Matrix.type(matrix_a) == Matrix_type.scalar and Matrix.type(matrix_b) == Matrix_type.matrix):
+            temp_matrix = Matrix.scalar_matrix_multiply(matrix_a,matrix_b).grid
+        elif((Matrix.type(matrix_a) == Matrix_type.horizontal_vector or Matrix.type(matrix_a) == Matrix_type.vertical_vector) and Matrix.type(matrix_b) == Matrix_type.matrix):
+            temp_matrix = Matrix.vector_matrix_multiply(matrix_a,matrix_b).grid
         else:
-            for m_1_y in range(len(matrix_a)):
+            for m_1_y in range(len(matrix_a.grid)):
                 temp_row = []
-                for m_2_x in range(len(matrix_b[0])):
+                for m_2_x in range(len(matrix_b.grid[0])):
                     dot_product = 0
-                    for m_1_x in range(len(matrix_a[m_1_y])):
-                        dot_product += int(matrix_a[m_1_y][m_1_x]) * int(matrix_b[m_1_x][m_2_x])
+                    for m_1_x in range(len(matrix_a.grid[m_1_y])):
+                        dot_product += float(matrix_a.grid[m_1_y][m_1_x]) * float(matrix_b.grid[m_1_x][m_2_x])
                     temp_row.append(dot_product)
                 temp_matrix.append(temp_row)
         return Matrix(temp_matrix)
+
+    def divide(matrix_a,matrix_b):
+        return Matrix.multiply(1/matrix_b,matrix_a)
 
     #adds the two input matrices and returns the sum
     def add(matrix_a, matrix_b):
@@ -133,6 +168,6 @@ user_grid.reflect().remove_horizontal_repeats().print()
 print('\nThe following is the product of the original grid and the reflection of the original grid')
 Matrix.multiply(user_grid, user_grid.reflect()).print()'''
 
-matrix1 = [[1],[10],[40]]
-matrix2 = [4,1,5]
+matrix1 = Matrix([[1,5],[10,10],[40,5]])
+matrix2 = Matrix([[4,1],[4,6],[3,7]])
 Matrix.multiply(matrix1,matrix2).print()
