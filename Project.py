@@ -1,5 +1,6 @@
 from enum import Enum
 import copy
+import math
 
 class MatrixType(Enum):
     scalar = 1
@@ -39,7 +40,7 @@ class Matrix:
         for row in self.grid:
             temp_str = '['
             for x in range(len(row)):
-                temp_str += str(row[x]) + (',' if x != (len(row) - 1) else '')
+                temp_str += str(round(row[x], 2)) + (',' if x != (len(row) - 1) else '')
             temp_str += ']'
             print(temp_str)
 
@@ -131,43 +132,23 @@ class Matrix:
             return Matrix.matrix_matrix_multiply(matrix_a, matrix_b)
 
     def inverse(self):
-        #return Matrix.multiply(1/self.determinant(),self)
         if len(self.grid) == 2 and len(self.grid[0]) == 2:
             temp_matrix = [[self.grid[1][1], -1* self.grid[0][1]],[-1 * self.grid[1][0],self.grid[0][0]]]
             return Matrix.multiply(1/self.determinant(),Matrix(temp_matrix))
+
         else:
+            total_determinant = self.determinant()
             temp_matrix = []
-            for m_old_y in range(len(self.grid)):
+            for row in range(len(self.grid)):
                 temp_row = []
-                for m_old_x in range(len(self.grid)):
-                    slot_value = 0
+                for column in range(len(self.grid)):
                     temp_grid = copy.deepcopy(self.grid)
-                    for row in temp_grid:
-                        row.pop(m_old_y)
-                    temp_grid.pop(m_old_x)
-                    for m_mini_x in range(len(temp_grid)):
-                        sub_slot_value = 1
-                        for m_mini_y in range(len(temp_grid)):
-                            if m_mini_x + m_mini_y > len(temp_grid) - 1:
-                                sub_slot_value *= temp_grid[m_mini_y][m_mini_x + m_mini_y - len(temp_grid)]
-                            elif m_mini_x + m_mini_y < 0:
-                                sub_slot_value *= temp_grid[m_mini_y][m_mini_x + m_mini_y + len(temp_grid)]
-                            else:
-                                sub_slot_value *= temp_grid[m_mini_y][m_mini_x + m_mini_y]
-                        slot_value += sub_slot_value
-                    for m_mini_x in range(len(temp_grid)):
-                        sub_slot_value = 1
-                        for m_mini_y in range(len(temp_grid)):
-                            if m_mini_x - m_mini_y > len(temp_grid) - 1:
-                                sub_slot_value *= temp_grid[m_mini_y][m_mini_x - m_mini_y - len(temp_grid)]
-                            elif m_mini_x - m_mini_y < 0:
-                                sub_slot_value *= temp_grid[m_mini_y][m_mini_x - m_mini_y + len(temp_grid)]
-                            else:
-                                sub_slot_value *= temp_grid[m_mini_y][m_mini_x - m_mini_y]
-                        slot_value -= sub_slot_value
-                    temp_row.append(slot_value)
+                    for temp_grid_row in range(len(temp_grid)):
+                        temp_grid[temp_grid_row].pop(row)
+                    temp_grid.pop(column)
+                    temp_row.append(Matrix(temp_grid).determinant()/total_determinant * ((-1) ** ((row + 1 + column + 1))))
                 temp_matrix.append(temp_row)
-            return Matrix.multiply(1/self.determinant(),Matrix(temp_matrix))
+            return Matrix(temp_matrix)
 
 
 
@@ -199,12 +180,13 @@ class Matrix:
 
 
 
-matrix1 = Matrix([[1,2,5,6],[5,2,1,7],[4,5,2,6],[2,6,7,8]])
-matrix2 = Matrix([[5,4,5,4],[3,2,6,5],[3,5,2,7],[2,7,3,6]])
+matrix4_4 = Matrix([[1,2,5,6],[5,2,1,7],[4,5,2,6],[2,6,7,8]])
+matrix3_3 = Matrix([[1,5,2],[1,5,3],[5,3,5]])
+matrix2_2 = Matrix([[5,4],[2,4]])
 #Matrix.divide(matrix1,matrix2).print()
 #matrix1.inverse().print()
-matrix2.inverse().print()
-print(1/matrix2.determinant())
+#matrix2.inverse().print()
+print(matrix3_3.determinant())
 '''
 # prompts user for grid specifications
 row = int(input('How many rows would you like the grid to have: '))
