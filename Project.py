@@ -156,16 +156,14 @@ class Matrix:
                 temp_matrix.append(temp_row)
             return Matrix(temp_matrix)
 
-
-
     # adds the two input matrices and returns the sum
     def add(matrix_a, matrix_b):
         temp_matrix = []
-        if len(matrix_a.grid) == len(matrix_b) and len(matrix_a.grid[0]) == len(matrix_b[0]):
+        if len(matrix_a.grid) == len(matrix_b.grid) and len(matrix_a.grid[0]) == len(matrix_b.grid[0]):
             for row in range(len(matrix_a.grid)):
                 temp_row = []
                 for column in range(len(matrix_a.grid[0])):
-                    temp_row.append(matrix_a.grid[row][column] + matrix_b[row][column])
+                    temp_row.append(matrix_a.grid[row][column] + matrix_b.grid[row][column])
                 temp_matrix.append(temp_row)
         return Matrix(temp_matrix)
 
@@ -203,6 +201,7 @@ class Matrix:
             for x in range(len(temp_row)):
                 temp_row[x] = float(temp_row[x])
             user_grid.grid.append(temp_row)
+        clear_screen()
         return user_grid
 
 def ask_to_continue():
@@ -225,19 +224,40 @@ while(running):
 
     elif(choice == '2'):
         matrix1 = Matrix.enter_grid('the matrix')
-        print('The inverse of the matrix is: ')
-        matrix1.inverse().print()
+        if(matrix1.determinant() == 0):
+            print('The determinant of the matrix is 0, so an inverse cannnot be calculated')
+        else:
+            print('The inverse of the matrix is:\n')
+            matrix1.inverse().print()
 
     elif(choice == '3'):
-        pass
+        matrix1 = Matrix.enter_grid('the matrix')
+        print('The reflection of the grid is:\n')
+        matrix1.reflect().print()
+
     elif(choice == '4'):
-        pass
+        matrix1 = Matrix.enter_grid('the first matrix')
+        matrix2 = Matrix.enter_grid('the second matrix')
+        print('The sum of the two matrices is:\n')
+        Matrix.add(matrix1,matrix2).print()
+
     elif(choice == '5'):
-        pass
+        matrix1 = Matrix.enter_grid('the first matrix')
+        matrix2 = Matrix.enter_grid('the second matrix')
+        print('The difference of the two matrices is:\n')
+        Matrix.subtract(matrix1,matrix2).print()
+
     elif(choice == '6'):
-        pass
+        matrix1 = Matrix.enter_grid('the first matrix')
+        matrix2 = Matrix.enter_grid('the second matrix')
+        print('The product of the two matrices is:\n')
+        Matrix.multiply(matrix1,matrix2).print()
+
     elif(choice == '7'):
-        pass
+        matrix1 = Matrix.enter_grid('the first matrix')
+        matrix2 = Matrix.enter_grid('the second matrix')
+        print('The quotient of the two matrices is:\n')
+        Matrix.divide(matrix1,matrix2).print()
 
     running = ask_to_continue()
 
