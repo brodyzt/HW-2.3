@@ -2,12 +2,14 @@ from enum import Enum
 import copy
 import math
 
+def clear_screen():
+    print('\n' * 30)
+
 class MatrixType(Enum):
     scalar = 1
     horizontal_vector = 2
     vertical_vector = 3
     matrix = 4
-
 
 class Matrix:
     # following function returns a reflected version of the input grid
@@ -23,6 +25,10 @@ class Matrix:
                 temp_grid.append(self.grid[y][x])
             reflected.append(temp_grid)
         return Matrix(reflected)
+
+    # determines whether the matrix is symmetric or not
+    def is_symmetric(self):
+        return self.grid == Matrix(self.grid).reflect().grid # checks if original grid is equal to the transposed grid
 
     # returns a grid without horizontal repeats
     def remove_horizontal_repeats(self):
@@ -177,51 +183,70 @@ class Matrix:
     def divide(matrix_a, matrix_b):
         return Matrix.multiply(matrix_a,matrix_b.inverse())
 
+    def enter_grid(text):
+        clear_screen()
+        # prompts user for grid specifications
+        row = int(input('How many rows would you like {} to have: '.format(text)))
+        print('Please enter the contents of each row with each item separated by a ","')
+
+        # creates an empty grid that will be used to store user input
+        user_grid = Matrix([])
+
+        # takes 4 lines of user input and splits the lines by ',' to form a grid, lists inside of lists
+        for _ in range(row):
+            temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
+
+            #checks to make sure row lengths are the same to get a consistent grid
+            while _ != 0 and len(temp_row) != len(user_grid.grid[_ - 1]):
+                print('The number of items in each row of the grid must remain consistent. Please reenter this row.')
+                temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
+            for x in range(len(temp_row)):
+                temp_row[x] = float(temp_row[x])
+            user_grid.grid.append(temp_row)
+        return user_grid
+
+def ask_to_continue():
+    print('\n' * 3)
+    choice = input('Would you like to perform another calculation?: ').lower()
+    clear_screen()
+    return choice in ['y','ye','yes']
 
 
 
-matrix4_4 = Matrix([[1,2,5,6],[5,2,1,7],[4,5,2,6],[2,6,7,8]])
-matrix3_3 = Matrix([[1,5,2],[1,5,3],[5,3,5]])
+running = True
+while(running):
+    print('Welcome to the matrix calculator. Which of the following functions would you like to perform')
+    print('\n1.Calculate Determinant\n2.Calculate Inverse\n3.Determine Reflection of Grid\n4.Add Matrices\n5.Subtract Matrices\n6.Multiply Matrices\n7.Divide Matrices')
+    choice = input('\nChoice: ')
+
+    if(choice == '1'):
+        matrix1 = Matrix.enter_grid('the matrix')
+        print('The determinant of the matrix is: ' + str(matrix1.determinant()))
+
+    elif(choice == '2'):
+        matrix1 = Matrix.enter_grid('the matrix')
+        print('The inverse of the matrix is: ')
+        matrix1.inverse().print()
+
+    elif(choice == '3'):
+        pass
+    elif(choice == '4'):
+        pass
+    elif(choice == '5'):
+        pass
+    elif(choice == '6'):
+        pass
+    elif(choice == '7'):
+        pass
+
+    running = ask_to_continue()
+
+
+
+
+
+'''matrix4_4 = Matrix([[1,2,5,6],[5,2,1,7],[4,5,2,6],[2,6,7,8]])
+matrix3_3 = Matrix([[1,5,2],[5,5,3],[2,3,5]])
 matrix2_2 = Matrix([[5,4],[2,4]])
-#Matrix.divide(matrix1,matrix2).print()
-#matrix1.inverse().print()
-#matrix2.inverse().print()
-print(matrix3_3.determinant())
-'''
-# prompts user for grid specifications
-row = int(input('How many rows would you like the grid to have: '))
-print('Please enter the contents of each row with each item separated by a ","')
-
-# creates an empty grid that will be used to store user input
-user_grid = Matrix([])
-
-# takes 4 lines of user input and splits the lines by ',' to form a grid, lists inside of lists
-for _ in range(row):
-    temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
-
-    #checks to make sure row lengths are the same to get a consistent grid
-    while _ != 0 and len(temp_row) != len(user_grid.grid[_ - 1]):
-        print('The number of items in each row of the grid must remain consistent. Please reenter this row.')
-        temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
-    user_grid.grid.append(temp_row)
-
-# prints (a): the original grid
-print('\nThe Following is part (a), the original grid:')
-user_grid.print()
-
-# prints (b): the reflected grid
-print('\nThe Following is (b), the original grid reflected over the diagonal running from top left to bottom right:')
-user_grid.reflect().print()
-
-# prints (c): Both versions of the grid with horizontal repeats removed
-print('\nThe Following is part (c):')
-
-print('The original grid with repeats removed:')
-user_grid.remove_horizontal_repeats().print()
-
-print('The reflected grid with repeats removed:')
-user_grid.reflect().remove_horizontal_repeats().print()
-
-# prints the product of the original grid and its reflection
-print('\nThe following is the product of the original grid and the reflection of the original grid')
-Matrix.multiply(user_grid, user_grid.reflect()).print()'''
+matrix3_3.print()
+print(matrix3_3.is_symmetric())'''
