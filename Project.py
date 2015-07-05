@@ -189,7 +189,11 @@ class Matrix:
         while True: #checks to make sure user entered a valid number of rows
             try:
                 row = int(row)
-                break
+                while not row > 0:
+                    print("You didn't enter a valid number. Please try again.")
+                    row = int(input('How many rows would you like {} to have: '.format(text))) # user reenters value for valid number
+                else:
+                    break
             except ValueError:
                 print("You didn't enter a valid number. Please try again.")
                 row = input('How many rows would you like {} to have: '.format(text)) # user reenters value for valid number
@@ -230,7 +234,7 @@ def ask_to_continue():
 
 
 
-running = True
+'''running = True
 while(running):
     print('Welcome to the matrix calculator. Which of the following functions would you like to perform')
     print('\n1.Calculate Determinant\n2.Calculate Inverse\n3.Determine Reflection of Grid\n4.Add Matrices\n5.Subtract Matrices\n6.Multiply Matrices\n7.Divide Matrices')
@@ -280,7 +284,7 @@ while(running):
         else:
             Matrix.divide(matrix1,matrix2).print()
 
-    running = ask_to_continue()
+    running = ask_to_continue()'''
 
 
 '''matrix4_4 = Matrix([[1,2,5,6],[5,2,1,7],[4,5,2,6],[2,6,7,8]])
