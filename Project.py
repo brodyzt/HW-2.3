@@ -184,7 +184,16 @@ class Matrix:
     def enter_grid(text):
         clear_screen()
         # prompts user for grid specifications
-        row = int(input('How many rows would you like {} to have: '.format(text)))
+        row = input('How many rows would you like {} to have: '.format(text))
+
+        while True: #checks to make sure user entered a valid number of rows
+            try:
+                row = int(row)
+                break
+            except ValueError:
+                print("You didn't enter a valid number. Please try again.")
+                row = input('How many rows would you like {} to have: '.format(text)) # user reenters value for valid number
+
         print('Please enter the contents of each row with each item separated by a ","')
 
         # creates an empty grid that will be used to store user input
@@ -194,13 +203,22 @@ class Matrix:
         for _ in range(row):
             temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
 
-            #checks to make sure row lengths are the same to get a consistent grid
-            while _ != 0 and len(temp_row) != len(user_grid.grid[_ - 1]):
-                print('The number of items in each row of the grid must remain consistent. Please reenter this row.')
-                temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
-            for x in range(len(temp_row)):
-                temp_row[x] = float(temp_row[x])
+            while True:  # checks to make sure all the values in the row are valid numbers
+                try:
+                    # checks to make sure row lengths are the same to get a consistent grid
+                    while _ != 0 and len(temp_row) != len(user_grid.grid[_ - 1]):
+                        print('The number of items in each row of the grid must remain consistent. Please reenter this row.')
+                        temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
+
+                    for x in range(len(temp_row)):
+                        temp_row[x] = float(temp_row[x])
+                    break
+                except ValueError:
+                    print("You didn't enter a valid row. Please try again.")
+                    temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')  # asks user to reenter row with valid numbers
+
             user_grid.grid.append(temp_row)
+
         clear_screen()
         return user_grid
 
@@ -257,12 +275,12 @@ while(running):
         matrix1 = Matrix.enter_grid('the first matrix')
         matrix2 = Matrix.enter_grid('the second matrix')
         print('The quotient of the two matrices is:\n')
-        Matrix.divide(matrix1,matrix2).print()
+        if matrix2.determinant() == 0:
+            print('A quotient cannot be calculated because the determinant of the second matrix is equal to 0')
+        else:
+            Matrix.divide(matrix1,matrix2).print()
 
     running = ask_to_continue()
-
-
-
 
 
 '''matrix4_4 = Matrix([[1,2,5,6],[5,2,1,7],[4,5,2,6],[2,6,7,8]])
