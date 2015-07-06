@@ -334,7 +334,7 @@ def ask_to_continue():
 running = True
 while(running):
     print('Welcome to the matrix calculator. Which of the following functions would you like to perform')
-    print('\n1.Calculate Determinant\n2.Calculate Inverse\n3.Determine Reflection of Grid\n4.Add Matrices\n5.Subtract Matrices\n6.Multiply Matrices\n7.Divide Matrices')
+    print('\n1.Calculate Determinant\n2.Calculate Inverse\n3.Determine Reflection of Grid\n4.Determine if Matrix is Symmetric\n5.Add Matrices\n6.Subtract Matrices\n7.Multiply Matrices\n8.Divide Matrices')
     choice = input('\nChoice: ')
 
     if(choice == '1'):
@@ -355,18 +355,22 @@ while(running):
         matrix1.reflect().print()
 
     elif(choice == '4'):
+        matrix1 = Matrix.enter_grid('the matrix')
+        print("The matrix is " + ("not symmetric","symmetric")[matrix1.is_symmetric()])
+
+    elif(choice == '5'):
         matrix1 = Matrix.enter_grid('the first matrix')
         matrix2 = Matrix.enter_constrained_height_width_matrix('the second matrix',len(matrix1.grid),len(matrix1.grid[0]))
         print('The sum of the two matrices is:\n')
         Matrix.add(matrix1,matrix2).print()
 
-    elif(choice == '5'):
+    elif(choice == '6'):
         matrix1 = Matrix.enter_grid('the first matrix')
         matrix2 = Matrix.enter_constrained_height_width_matrix('the second matrix',len(matrix1.grid),len(matrix1.grid[0]))
         print('The difference of the two matrices is:\n')
         Matrix.subtract(matrix1,matrix2).print()
 
-    elif(choice == '6'):
+    elif(choice == '7'):
         clear_screen()
         input_text = input('Will you be multiplying by a scalar?')
         clear_screen()
@@ -391,7 +395,7 @@ while(running):
             print('The product of the two matrices is:\n')
             Matrix.multiply(matrix1,matrix2).print()
 
-    elif(choice == '7'):
+    elif(choice == '8'):
         matrix1 = Matrix.enter_grid('the first matrix')
         matrix2 = Matrix.enter_square_matrix('the second matrix',len(matrix1.grid))
         print('The quotient of the two matrices is:\n')
