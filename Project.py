@@ -272,6 +272,58 @@ class Matrix:
         clear_screen()
         return user_grid
 
+    # function for entering a square matrix
+    def enter_square_matrix(text, spec):
+        if spec == None:
+            clear_screen()
+            # prompts user for grid specifications
+            row = input('How many rows would you like {} to have: '.format(text))
+
+            while True: #checks to make sure user entered a valid number of rows
+                try:
+                    row = int(row)
+                    while not row > 0:
+                        print("You didn't enter a valid number. Please try again.")
+                        row = int(input('How many rows would you like {} to have: '.format(text))) # user reenters value for valid number
+                    else:
+                        break
+                except ValueError:
+                    print("You didn't enter a valid number. Please try again.")
+                    row = input('How many rows would you like {} to have: '.format(text)) # user reenters value for valid number
+
+            print("This must be a square matrix so there must also be {} numbers in each row.\n".format(row))
+        else:
+            row = spec
+            print("This must be a square matrix so there must be {} rows and {} items in each row.\n".format(spec,spec))
+
+        print('Please enter the contents of each row with each item separated by a ","')
+
+        # creates an empty grid that will be used to store user input
+        user_grid = Matrix([])
+
+        # takes 4 lines of user input and splits the lines by ',' to form a grid, lists inside of lists
+        for _ in range(row):
+            temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
+
+            while True:  # checks to make sure all the values in the row are valid numbers
+                try:
+                    # checks to make sure row lengths are the same to get a consistent grid
+                    while len(temp_row) != row:
+                        print('The number of items in each row must be {}. Please reenter this row.'.format(row))
+                        temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
+
+                    for x in range(len(temp_row)):
+                        temp_row[x] = float(temp_row[x])
+                    break
+                except ValueError:
+                    print("You didn't enter a valid row. Please try again.")
+                    temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')  # asks user to reenter row with valid numbers
+
+            user_grid.grid.append(temp_row)
+
+        clear_screen()
+        return user_grid
+
 # asks the user if they want to continue
 def ask_to_continue():
     print('\n' * 3)
@@ -290,7 +342,7 @@ while(running):
         print('The determinant of the matrix is: ' + str(matrix1.determinant()))
 
     elif(choice == '2'):
-        matrix1 = Matrix.enter_grid('the matrix')
+        matrix1 = Matrix.enter_square_matrix('the matrix')
         if(matrix1.determinant() == 0):
             print("The determinant of the matrix is 0, so an inverse can't be calculated")
         else:
@@ -341,7 +393,7 @@ while(running):
 
     elif(choice == '7'):
         matrix1 = Matrix.enter_grid('the first matrix')
-        matrix2 = Matrix.enter_grid('the second matrix')
+        matrix2 = Matrix.enter_square_matrix('the second matrix',len(matrix1.grid))
         print('The quotient of the two matrices is:\n')
 
         if matrix2.determinant() == 0:
