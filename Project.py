@@ -462,7 +462,7 @@ while(running):
 
     elif(choice == '8'):
         matrix1 = Matrix.enter_matrix_with_min_width('the first matrix', 2)
-        matrix2 = Matrix.enter_square_matrix('the second matrix',len(matrix1.grid))
+        matrix2 = Matrix.enter_square_matrix('the second matrix',len(matrix1.grid[0]))
         print('The quotient of the two matrices is:\n')
 
         if matrix2.determinant() == 0:
