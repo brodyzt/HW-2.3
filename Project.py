@@ -77,43 +77,17 @@ class Matrix:
                     determinant -= self.grid[0][x] * Matrix(temp_grid).determinant()
         return determinant
 
-    def vector_matrix_multiply(matrix_a, matrix_b):
-        temp_matrix = []
-        if type(matrix_a.grid[0]) is not list:
-            temp_row = []
-            dot_product = 0
-            for m_1_x in range(len(matrix_a.grid)):
-                dot_product += matrix_a.grid[m_1_x] * matrix_b.grid[m_1_x][0]
-            temp_row.append(dot_product)
-            temp_matrix.append(temp_row)
-        elif type(matrix_b[0]) is not list:
-            for m_1_y in range(len(matrix_a.grid)):
-                temp_row = []
-                for m_2_x in range(len(matrix_b)):
-                    dot_product = 0
-                    for m_1_x in range(len(matrix_a.grid[m_1_y])):
-                        dot_product += int(matrix_a.grid[m_1_y][m_1_x]) * int(matrix_b[m_2_x])
-                    temp_row.append(dot_product)
-                temp_matrix.append(temp_row)
-        return Matrix(temp_matrix)
-
     def scalar_matrix_multiply(input1, input2):
-        temp_matrix = []
-        if Matrix.type(input1) == MatrixType.scalar:
+            temp_matrix = []
             for row in input2.grid:
                 temp_row = []
                 for item in row:
                     temp_row.append(item * input1)
                 temp_matrix.append(temp_row)
-        else:
-            for row in input1.grid:
-                temp_row = []
-                for item in row:
-                    temp_row.append(item * input2)
-                temp_matrix.append(temp_row)
-        return Matrix(temp_matrix)
+            return Matrix(temp_matrix)
 
-    def matrix_matrix_multiply(matrix_a, matrix_b):
+    # multiples the two input matrices and returns the product
+    def multiply(matrix_a, matrix_b):
         temp_matrix = []
         for m_1_y in range(len(matrix_a.grid)):
             temp_row = []
@@ -124,18 +98,6 @@ class Matrix:
                 temp_row.append(dot_product)
             temp_matrix.append(temp_row)
         return Matrix(temp_matrix)
-
-    # multiples the two input matrices and returns the product
-    def multiply(matrix_a, matrix_b):
-        if ((Matrix.type(matrix_a) == MatrixType.scalar and Matrix.type(matrix_b) == MatrixType.matrix)
-                or (Matrix.type(matrix_b) == MatrixType.scalar and Matrix.type(matrix_a) == MatrixType.matrix)):
-            return Matrix.scalar_matrix_multiply(matrix_a, matrix_b)
-        elif ((Matrix.type(matrix_a) == MatrixType.horizontal_vector
-               or Matrix.type(matrix_a) == MatrixType.vertical_vector)
-                and Matrix.type(matrix_b) == MatrixType.matrix):
-            return Matrix.vector_matrix_multiply(matrix_a, matrix_b)
-        elif Matrix.type(matrix_a) == MatrixType.matrix and Matrix.type(matrix_b) == MatrixType.matrix:
-            return Matrix.matrix_matrix_multiply(matrix_a, matrix_b)
 
     def inverse(self):
         if len(self.grid) == 2 and len(self.grid[0]) == 2:
@@ -226,6 +188,43 @@ class Matrix:
         clear_screen()
         return user_grid
 
+    def enter_constrained_matrix(text, height):
+
+        clear_screen()
+        # prompts user for grid specifications
+        print("In order to perform the calculation, there must be {} rows in the matrix.".format(height))
+
+        print('Please enter the contents of each row with each item separated by a ","')
+
+        # creates an empty grid that will be used to store user input
+        user_grid = Matrix([])
+
+        # takes 4 lines of user input and splits the lines by ',' to form a grid, lists inside of lists
+        for _ in range(height):
+            temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
+
+            while True:  # checks to make sure all the values in the row are valid numbers
+                try:
+                    # checks to make sure row lengths are the same to get a consistent grid
+                    while _ != 0 and len(temp_row) != len(user_grid.grid[_ - 1]):
+                        print('The number of items in each row of the grid must remain consistent. Please reenter this row.')
+                        temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')
+
+                    for x in range(len(temp_row)):
+                        temp_row[x] = float(temp_row[x])
+                    break
+                except ValueError:
+                    print("You didn't enter a valid row. Please try again.")
+                    temp_row = input("Enter row {0}: ".format(_ + 1)).split(',')  # asks user to reenter row with valid numbers
+
+            user_grid.grid.append(temp_row)
+
+        clear_screen()
+        return user_grid
+
+
+
+
 def ask_to_continue():
     print('\n' * 3)
     choice = input('Would you like to perform another calculation?: ').lower()
@@ -234,7 +233,7 @@ def ask_to_continue():
 
 
 
-'''running = True
+running = True
 while(running):
     print('Welcome to the matrix calculator. Which of the following functions would you like to perform')
     print('\n1.Calculate Determinant\n2.Calculate Inverse\n3.Determine Reflection of Grid\n4.Add Matrices\n5.Subtract Matrices\n6.Multiply Matrices\n7.Divide Matrices')
@@ -270,10 +269,26 @@ while(running):
         Matrix.subtract(matrix1,matrix2).print()
 
     elif(choice == '6'):
-        matrix1 = Matrix.enter_grid('the first matrix')
-        matrix2 = Matrix.enter_grid('the second matrix')
-        print('The product of the two matrices is:\n')
-        Matrix.multiply(matrix1,matrix2).print()
+        clear_screen()
+        input_text = input('Will you be multiplying by a scalar?')
+        clear_screen()
+        if(input_text in ['y','ye','yes']):
+            scalar = input('Please enter a scalar: ')
+            while True:
+                try:
+                    scalar = float(scalar)
+                    break
+                except ValueError:
+                    print("You didn't enter a valid scalar. Please try again.")
+                    scalar = input('Please enter a scalar: ')
+            matrix2 = Matrix.enter_grid('the matrix')
+            print('The product of the scalar and matrix is:\n')
+            Matrix.scalar_matrix_multiply(scalar,matrix2).print()
+        else:
+            matrix1 = Matrix.enter_grid('the first matrix')
+            matrix2 = Matrix.enter_constrained_matrix('the second matrix', len(matrix1.grid[0]))
+            print('The product of the two matrices is:\n')
+            Matrix.multiply(matrix1,matrix2).print()
 
     elif(choice == '7'):
         matrix1 = Matrix.enter_grid('the first matrix')
@@ -284,9 +299,10 @@ while(running):
         else:
             Matrix.divide(matrix1,matrix2).print()
 
-    running = ask_to_continue()'''
+    running = ask_to_continue()
 
 
+# test objects
 '''matrix4_4 = Matrix([[1,2,5,6],[5,2,1,7],[4,5,2,6],[2,6,7,8]])
 matrix3_3 = Matrix([[1,5,2],[5,5,3],[2,3,5]])
 matrix2_2 = Matrix([[5,4],[2,4]])
