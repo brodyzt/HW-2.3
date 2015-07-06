@@ -4,7 +4,6 @@ import copy
 def clear_screen():
     print('\n' * 30)  # prints new line 30 times to clear the screen
 
-
 class MatrixType(Enum):  # creates an enumeration class to differentiate between matrix types
     scalar = 1
     horizontal_vector = 2
@@ -319,8 +318,10 @@ while(running):
         clear_screen()
         input_text = input('Will you be multiplying by a scalar?')
         clear_screen()
+
         if(input_text in ['y','ye','yes']):
             scalar = input('Please enter a scalar: ')
+
             while True:
                 try:
                     scalar = float(scalar)
@@ -328,6 +329,7 @@ while(running):
                 except ValueError:
                     print("You didn't enter a valid scalar. Please try again.")
                     scalar = input('Please enter a scalar: ')
+
             matrix2 = Matrix.enter_grid('the matrix')
             print('The product of the scalar and matrix is:\n')
             Matrix.scalar_matrix_multiply(scalar,matrix2).print()
@@ -341,6 +343,7 @@ while(running):
         matrix1 = Matrix.enter_grid('the first matrix')
         matrix2 = Matrix.enter_grid('the second matrix')
         print('The quotient of the two matrices is:\n')
+
         if matrix2.determinant() == 0:
             print('A quotient cannot be calculated because the determinant of the second matrix is equal to 0')
         else:
