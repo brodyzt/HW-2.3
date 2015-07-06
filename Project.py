@@ -11,8 +11,17 @@ class MatrixType(Enum):  # creates an enumeration class to differentiate between
     matrix = 4
 
 class Matrix:
+    # function that initializes the Matrix object after creation
     def __init__(self, grid):
         self.grid = grid  # creates a grid for each Matrix object when initialized
+
+    # returns the width of the matrix
+    def width(self):
+        return len(self.grid[0])
+
+    # returns the height of the matrix
+    def height(self):
+        return len(self.grid)
 
     # returns a grid reflected over a line from top left to bottom right
     def reflect(self):
@@ -272,6 +281,7 @@ class Matrix:
         clear_screen()
         return user_grid
 
+    # user enters matrix with specified parameters
     def enter_matrix_with_min_width(text, min_width):
 
         clear_screen()
@@ -321,6 +331,7 @@ class Matrix:
         clear_screen()
         return user_grid
 
+    # user enters a matrix that is forced to be a square
     def enter_square_matrix(text, spec = None): # spec is set to none to make it optional
         if spec == None:
             clear_screen()
@@ -379,95 +390,100 @@ def ask_to_continue():
     clear_screen()
     return choice in ['y','ye','yes'] # returns whether the user wants to continue or not
 
-running = True
-while(running):
-    print('Welcome to the matrix calculator. Which of the following functions would you like to perform')
-    print('\n1.Calculate Determinant\n2.Calculate Inverse\n3.Determine Reflection of Grid\n4.Determine if Matrix is Symmetric\n5.Add Matrices\n6.Subtract Matrices\n7.Multiply Matrices\n8.Divide Matrices')
-    choice = input('\nChoice: ')
+# code for the matrix calculator wrapped in a function
+def matrix_calculator():
+    running = True
+    while(running):
+        print('Welcome to the matrix calculator. Which of the following functions would you like to perform')
+        print('\n1.Calculate Determinant\n2.Calculate Inverse\n3.Determine Reflection of Grid\n4.Determine if Matrix is Symmetric\n5.Add Matrices\n6.Subtract Matrices\n7.Multiply Matrices\n8.Divide Matrices')
+        choice = input('\nChoice: ')
 
-    if(choice == '1'):
-        matrix1 = Matrix.enter_grid('the matrix')
-        if len(matrix1.grid) < 2 or len(matrix1.grid[0]) < 2:
-            print("The determinant can't be calculated because the matrix must be at least 2x2.")
-        else:
-            print('The determinant of the matrix is: ' + str(matrix1.determinant()))
+        if(choice == '1'):
+            matrix1 = Matrix.enter_grid('the matrix')
+            if len(matrix1.grid) < 2 or len(matrix1.grid[0]) < 2:
+                print("The determinant can't be calculated because the matrix must be at least 2x2.")
+            else:
+                print('The determinant of the matrix is: ' + str(matrix1.determinant()))
 
-    elif(choice == '2'):
-        clear_screen()
-        print('The matrix must be square and be larger than 2x2 to calculate the determinant.')
-        size = input('What is the number of rows: ')
-        while True:
-            try:
-                size = int(size)
-                while size < 2:
-                    print('The matrix must be at least 2x2. Please try again')
-                    size = int(input('What is the number of rows: '))
-                break
-            except ValueError:
-                print("You didn't enter a valid number please try again.")
-                size = input('What is the number of rows: ')
-
-        matrix1 = Matrix.enter_square_matrix('the matrix', size)
-        if(matrix1.determinant() == 0):
-            print("The determinant of the matrix is 0, so an inverse can't be calculated")
-        else:
-            print('The inverse of the matrix is:\n')
-            matrix1.inverse().print()
-
-    elif(choice == '3'):
-        matrix1 = Matrix.enter_grid('the matrix')
-        print('The reflection of the grid is:\n')
-        matrix1.reflect().print()
-
-    elif(choice == '4'):
-        matrix1 = Matrix.enter_grid('the matrix')
-        print("The matrix is " + ("not symmetric","symmetric")[matrix1.is_symmetric()])
-
-    elif(choice == '5'):
-        matrix1 = Matrix.enter_grid('the first matrix')
-        matrix2 = Matrix.enter_constrained_height_width_matrix('the second matrix',len(matrix1.grid),len(matrix1.grid[0]))
-        print('The sum of the two matrices is:\n')
-        Matrix.add(matrix1,matrix2).print()
-
-    elif(choice == '6'):
-        matrix1 = Matrix.enter_grid('the first matrix')
-        matrix2 = Matrix.enter_constrained_height_width_matrix('the second matrix',len(matrix1.grid),len(matrix1.grid[0]))
-        print('The difference of the two matrices is:\n')
-        Matrix.subtract(matrix1,matrix2).print()
-
-    elif(choice == '7'):
-        clear_screen()
-        input_text = input('Will you be multiplying by a scalar?')
-        clear_screen()
-
-        if(input_text in ['y','ye','yes']):
-            scalar = input('Please enter a scalar: ')
-
+        elif(choice == '2'):
+            clear_screen()
+            print('The matrix must be square and be larger than 2x2 to calculate the determinant.')
+            size = input('What is the number of rows: ')
             while True:
                 try:
-                    scalar = float(scalar)
+                    size = int(size)
+                    while size < 2:
+                        print('The matrix must be at least 2x2. Please try again')
+                        size = int(input('What is the number of rows: '))
                     break
                 except ValueError:
-                    print("You didn't enter a valid scalar. Please try again.")
-                    scalar = input('Please enter a scalar: ')
+                    print("You didn't enter a valid number please try again.")
+                    size = input('What is the number of rows: ')
 
-            matrix2 = Matrix.enter_grid('the matrix')
-            print('The product of the scalar and matrix is:\n')
-            Matrix.scalar_matrix_multiply(scalar,matrix2).print()
-        else:
+            matrix1 = Matrix.enter_square_matrix('the matrix', size)
+            if(matrix1.determinant() == 0):
+                print("The determinant of the matrix is 0, so an inverse can't be calculated")
+            else:
+                print('The inverse of the matrix is:\n')
+                matrix1.inverse().print()
+
+        elif(choice == '3'):
+            matrix1 = Matrix.enter_grid('the matrix')
+            print('The reflection of the grid is:\n')
+            matrix1.reflect().print()
+
+        elif(choice == '4'):
+            matrix1 = Matrix.enter_grid('the matrix')
+            print("The matrix is " + ("not symmetric","symmetric")[matrix1.is_symmetric()])
+
+        elif(choice == '5'):
             matrix1 = Matrix.enter_grid('the first matrix')
-            matrix2 = Matrix.enter_constrained_height_matrix('the second matrix', len(matrix1.grid[0]))
-            print('The product of the two matrices is:\n')
-            Matrix.multiply(matrix1,matrix2).print()
+            matrix2 = Matrix.enter_constrained_height_width_matrix('the second matrix',len(matrix1.grid),len(matrix1.grid[0]))
+            print('The sum of the two matrices is:\n')
+            Matrix.add(matrix1,matrix2).print()
 
-    elif(choice == '8'):
-        matrix1 = Matrix.enter_matrix_with_min_width('the first matrix', 2)
-        matrix2 = Matrix.enter_square_matrix('the second matrix',len(matrix1.grid[0]))
-        print('The quotient of the two matrices is:\n')
+        elif(choice == '6'):
+            matrix1 = Matrix.enter_grid('the first matrix')
+            matrix2 = Matrix.enter_constrained_height_width_matrix('the second matrix',len(matrix1.grid),len(matrix1.grid[0]))
+            print('The difference of the two matrices is:\n')
+            Matrix.subtract(matrix1,matrix2).print()
 
-        if matrix2.determinant() == 0:
-            print('A quotient cannot be calculated because the determinant of the second matrix is equal to 0')
-        else:
-            Matrix.divide(matrix1,matrix2).print()
+        elif(choice == '7'):
+            clear_screen()
+            input_text = input('Will you be multiplying by a scalar?')
+            clear_screen()
 
-    running = ask_to_continue()
+            if(input_text in ['y','ye','yes']):
+                scalar = input('Please enter a scalar: ')
+
+                while True:
+                    try:
+                        scalar = float(scalar)
+                        break
+                    except ValueError:
+                        print("You didn't enter a valid scalar. Please try again.")
+                        scalar = input('Please enter a scalar: ')
+
+                matrix2 = Matrix.enter_grid('the matrix')
+                print('The product of the scalar and matrix is:\n')
+                Matrix.scalar_matrix_multiply(scalar,matrix2).print()
+            else:
+                matrix1 = Matrix.enter_grid('the first matrix')
+                matrix2 = Matrix.enter_constrained_height_matrix('the second matrix', len(matrix1.grid[0]))
+                print('The product of the two matrices is:\n')
+                Matrix.multiply(matrix1,matrix2).print()
+
+        elif(choice == '8'):
+            matrix1 = Matrix.enter_matrix_with_min_width('the first matrix', 2)
+            matrix2 = Matrix.enter_square_matrix('the second matrix',len(matrix1.grid[0]))
+            print('The quotient of the two matrices is:\n')
+
+            if matrix2.determinant() == 0:
+                print('A quotient cannot be calculated because the determinant of the second matrix is equal to 0')
+            else:
+                Matrix.divide(matrix1,matrix2).print()
+
+        running = ask_to_continue()
+
+# calls the calculator function
+matrix_calculator()
