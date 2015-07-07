@@ -1,15 +1,18 @@
 from enum import Enum
 import copy
 
+# prints new line 30 times to clear the screen
 def clear_screen():
-    print('\n' * 30)  # prints new line 30 times to clear the screen
+    print('\n' * 30)
 
-class MatrixType(Enum):  # creates an enumeration class to differentiate between matrix types
+# creates an enumeration class to differentiate between matrix types
+class MatrixType(Enum):
     scalar = 1
     horizontal_vector = 2
     vertical_vector = 3
     matrix = 4
 
+# Matrix class with functions
 class Matrix:
     # function that initializes the Matrix object after creation
     def __init__(self, grid):
@@ -450,7 +453,7 @@ def matrix_calculator():
 
         elif(choice == '7'):
             clear_screen()
-            input_text = input('Will you be multiplying by a scalar?')
+            input_text = input('Will you be multiplying by a scalar?: ')
             clear_screen()
 
             if(input_text in ['y','ye','yes']):
