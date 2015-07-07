@@ -20,20 +20,20 @@ class Matrix:
 
     # returns the width of the matrix
     def width(self):
-        return len(self.grid[0])
+        return len(self.grid[0])  # returns the length of the first row in self.grid (which is equal to the width of the matrix)
 
     # returns the height of the matrix
     def height(self):
-        return len(self.grid)
+        return len(self.grid)  # returns the number of rows in self.grid (which is equal to the height of the matrix)
 
     # returns a grid reflected over a line from top left to bottom right
     def reflect(self):
         reflected = []
-        for x in range(len(self.grid[0])):
+        for x in range(len(self.grid[0])):  # cycle through the columns of the matrix
             temp_grid = []
-            for y in range(len(self.grid)):
-                temp_grid.append(self.grid[y][x])
-            reflected.append(temp_grid)
+            for y in range(len(self.grid)): # cycle through the rows of the matrix
+                temp_grid.append(self.grid[y][x])  # append the current item to the new matrix with reverse x and y coordinates
+            reflected.append(temp_grid)  # adds the temporary row to the new grid
         return Matrix(reflected)
 
     # determines whether the matrix is symmetric or not
@@ -64,13 +64,13 @@ class Matrix:
     def type(input_object):
         if (type(input_object) is int or type(input_object) is float)\
                 or (len(input_object.grid) == 1 and len(input_object.grid[0]) == 1):
-            return MatrixType.scalar
+            return MatrixType.scalar  # returns scalar type if the matrix is 1x1
         elif type(input_object.grid) is list and type(input_object.grid[0]) is not list:
-            return MatrixType.horizontal_vector
+            return MatrixType.horizontal_vector  # returns horizontal vector type if height is 1 and width > 1
         elif type(input_object.grid) is list and len(input_object.grid[0]) == 1:
-            return MatrixType.vertical_vector
+            return MatrixType.vertical_vector # returns vertical vector type if width = 1 and height > 1
         elif type(input_object.grid) is list and len(input_object.grid[0]) > 1:
-            return MatrixType.matrix
+            return MatrixType.matrix # returns matrix type if width and height are greater than 1
 
     # calculates the determinant of the matrix
     def determinant(self):
@@ -87,6 +87,7 @@ class Matrix:
                     row.pop(x)
                 temp_grid.pop(0)
 
+                # accounts for that each column switches off between adding and subtracting and runs recursively to find the determinant of inner matrices
                 if x % 2 == 0:
                     determinant += self.grid[0][x] * Matrix(temp_grid).determinant()
                 else:
@@ -123,9 +124,9 @@ class Matrix:
 
     # determines the inverse of a matrix
     def inverse(self):
-        if len(self.grid) == 2 and len(self.grid[0]) == 2:
+        if len(self.grid) == 2 and len(self.grid[0]) == 2:  # only runs if the grid is 2x2
             temp_matrix = [[self.grid[1][1], -1* self.grid[0][1]],[-1 * self.grid[1][0],self.grid[0][0]]]
-            return Matrix.scalar_matrix_multiply(1/self.determinant(),Matrix(temp_matrix))
+            return Matrix.scalar_matrix_multiply(1/self.determinant(),Matrix(temp_matrix)) # multiplies the reciprocal of the determinant by the matrix to find the inverse
 
         else:
             total_determinant = self.determinant()
@@ -134,10 +135,13 @@ class Matrix:
                 temp_row = []
                 for column in range(len(self.grid)):
                     temp_grid = copy.deepcopy(self.grid)
+
+                    #removes the row and column of the current item from temp_grid
                     for temp_grid_row in range(len(temp_grid)):
                         temp_grid[temp_grid_row].pop(row)
                     temp_grid.pop(column)
-                    temp_row.append(Matrix(temp_grid).determinant()/total_determinant * ((-1) ** ((row + 1 + column + 1))))
+
+                    temp_row.append(Matrix(temp_grid).determinant()/total_determinant * ((-1) ** ((row + 1 + column + 1))))  # divides the determinant of the smaller grid by the determinant of the entire matrix
                 temp_matrix.append(temp_row)
             return Matrix(temp_matrix)
 
@@ -148,7 +152,7 @@ class Matrix:
             for row in range(len(matrix_a.grid)):
                 temp_row = []
                 for column in range(len(matrix_a.grid[0])):
-                    temp_row.append(matrix_a.grid[row][column] + matrix_b.grid[row][column])
+                    temp_row.append(matrix_a.grid[row][column] + matrix_b.grid[row][column])  # adds corresponding items in the two matrices
                 temp_matrix.append(temp_row)
 
         return Matrix(temp_matrix)
@@ -160,7 +164,7 @@ class Matrix:
             for row in range(len(matrix_a.grid)):
                 temp_row = []
                 for column in range(len(matrix_a.grid[0])):
-                    temp_row.append(matrix_a.grid[row][column] - matrix_b[row][column])
+                    temp_row.append(matrix_a.grid[row][column] - matrix_b[row][column]) # calculates the difference between the corresponding items in the two matrices
                 temp_matrix.append(temp_row)
         return Matrix(temp_matrix)
 
@@ -459,7 +463,7 @@ def matrix_calculator():
             if(input_text in ['y','ye','yes']):
                 scalar = input('Please enter a scalar: ')
 
-                while True:
+                while True:  # checks to make sure the user entered a valid scalar
                     try:
                         scalar = float(scalar)
                         break
