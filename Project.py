@@ -18,6 +18,14 @@ class Matrix:
     def __init__(self, grid):
         self.grid = grid  # creates a grid for each Matrix object when initialized
 
+    # overloads addition function for matrix class
+    def __add__(self, other):
+        return Matrix.add(self,other)
+
+    # overloads subtraction function for matrix class
+    def __sub__(self, other):
+        return Matrix.subtract(self,other)
+
     # returns the width of the matrix
     def width(self):
         return len(self.grid[0])  # returns the length of the first row in self.grid (which is equal to the width of the matrix)
@@ -447,13 +455,13 @@ def matrix_calculator():
             matrix1 = Matrix.enter_grid('the first matrix')
             matrix2 = Matrix.enter_constrained_height_width_matrix('the second matrix',len(matrix1.grid),len(matrix1.grid[0]))
             print('The sum of the two matrices is:\n')
-            Matrix.add(matrix1,matrix2).print()
+            (matrix1 + matrix2).print()
 
         elif(choice == '6'):
             matrix1 = Matrix.enter_grid('the first matrix')
             matrix2 = Matrix.enter_constrained_height_width_matrix('the second matrix',len(matrix1.grid),len(matrix1.grid[0]))
             print('The difference of the two matrices is:\n')
-            Matrix.subtract(matrix1,matrix2).print()
+            (matrix1 - matrix2).print()
 
         elif(choice == '7'):
             clear_screen()
